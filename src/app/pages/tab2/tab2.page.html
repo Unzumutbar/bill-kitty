@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-title>
+      <div class="center-full">
+        <ion-icon
+          src="../../../assets/icon/md-cat-white.svg"
+          class="title-icon"
+        ></ion-icon
+        >Bill Kitty
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-row>
+    <ion-col size="12">
+      <ion-item>
+        <ion-datetime
+          [(ngModel)]="newRecord.Date"
+          displayFormat="DD.MM.YYYY"
+          placeholder="Datum"
+        ></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col size="12">
+      <ion-select [(ngModel)]="newRecord.User" placeholder="Person">
+        <ion-select-option *ngFor="let user of users" [value]="user"
+          >{{user.Name}}</ion-select-option
+        >
+      </ion-select>
+    </ion-col>
+    <ion-col size="12">
+      <ion-item>
+        <ion-input
+          [(ngModel)]="newRecord.Description"
+          placeholder="Beschreibung"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="12">
+      <ion-item>
+        <ion-input
+          [(ngModel)]="newRecord.Amount"
+          placeholder="Betrag(€)"
+          type="number"
+        ></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="10" offset="1">
+      <ion-button
+        expand="block"
+        color="success"
+        (click)="addRecord(newRecord)"
+        [disabled]="InputInvalid"
+        >Hinzufügen</ion-button
+      >
+    </ion-col>
+  </ion-row>
+</ion-content>

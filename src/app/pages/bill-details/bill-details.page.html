@@ -1,0 +1,55 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-title>
+      <div class="center-full"><ion-icon src="../../../assets/icon/md-cat-white.svg" class="title-icon"></ion-icon>Bill Kitty</div>
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h2 class="ion-text-center">Übersicht</h2>
+  <ion-row class="ion-text-center" class="header-row">
+    <ion-col size="1" class="ion-text-center"></ion-col>
+    <ion-col size="3" class="ion-text-left"> Person </ion-col>
+    <ion-col size="3" class="ion-text-right"> Bezahlt </ion-col>
+    <ion-col size="3" class="ion-text-right"> Anteil </ion-col>
+    <ion-col size="2" class="ion-text-right"> Offen </ion-col>
+  </ion-row>
+
+  <ion-row *ngFor="let splitBill of bill.SplitBills" class="data-row">
+    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="splitBill.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="3" class="ion-text-left"> {{splitBill.User.Name}} </ion-col>
+    <ion-col size="3" class="ion-text-right"> {{splitBill.PayedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+    <ion-col size="3" class="ion-text-right"> {{splitBill.SharedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+    <ion-col size="2" class="ion-text-right">
+      <ion-label *ngIf="splitBill.OpenAmount < 0" color="danger">
+        {{splitBill.OpenAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
+      </ion-label>
+      <ion-label *ngIf="splitBill.OpenAmount >= 0" color="success">
+        {{splitBill.OpenAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
+      </ion-label>
+    </ion-col>
+  </ion-row>
+  <ion-row class="data-row">
+    <ion-col size="3" offset="1" class="ion-text-left"> Gesamt </ion-col>
+    <ion-col size="3" class="ion-text-right"> {{bill.TotalAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+  </ion-row>
+
+  <h2 class="ion-text-center">Quittungen</h2>
+  <ion-row class="ion-text-center" class="header-row">
+    <ion-col size="1" class="ion-text-center"></ion-col>
+    <ion-col size="3" class="ion-text-center"> Datum </ion-col>
+    <ion-col size="5" class="ion-text-left"> Hinweis </ion-col>
+    <ion-col size="3" class="ion-text-right"> Betrag </ion-col>
+  </ion-row>
+
+  <ion-row *ngFor="let record of bill.records; let i = index" class="data-row">
+    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="record.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="3" class="ion-text-center"> {{record.DisplayDate}} </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{record.Description}} </ion-col>
+    <ion-col size="3" class="ion-text-right"> {{record.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+  </ion-row>
+</ion-content>
