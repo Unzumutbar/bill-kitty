@@ -2,6 +2,7 @@ import { CheckStatus, Receipt, User } from '../../shared/models';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
+import { LogService } from '../../services/log.service';
 import { ModalController } from '@ionic/angular';
 import { defaultUsers } from '../../shared/lists';
 
@@ -17,6 +18,7 @@ export class UpdaterecordComponent implements OnInit {
   constructor(
     private firestore: AngularFirestore,
     private modalController: ModalController,
+    private log: LogService
   ) { }
 
   public ngOnInit() {
@@ -30,6 +32,7 @@ export class UpdaterecordComponent implements OnInit {
     updateReceipt['description'] = this.receipt.Description,
     updateReceipt['amount'] = this.receipt.Amount,
     this.firestore.doc('/Receipts/' + this.receipt.Id).update(updateReceipt).then(() => {
+      this.log.logReceiptUpdate(this.receipt);
       this.closeModal(CheckStatus.Approve);
     });
   }

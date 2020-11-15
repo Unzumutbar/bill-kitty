@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ConfirmBillPage } from '../confirm-bill/confirm-bill.page';
 import { DeleteReceiptPage } from '../delete-receipt/delete-receipt.page';
+import { LogService } from '../../services/log.service';
 import { ModalController } from '@ionic/angular';
 import { NotificationService } from '../../services/notification.service';
 import { UpdaterecordComponent } from '../../components/updaterecord/updaterecord.component';
@@ -19,7 +20,8 @@ export class Tab1Page implements OnInit {
   constructor(
     private firestore: AngularFirestore,
     private modalController: ModalController,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private logService: LogService
   ) {}
 
   public ngOnInit() {
@@ -128,7 +130,9 @@ export class Tab1Page implements OnInit {
         const result = dataReturned.data as CheckStatus;
         if (result === CheckStatus.Approve) {
           this.firestore.doc('/Receipts/' + receipt.Id).delete().then(
-            () => {this.loadData();
+            () => {
+              this.logService.logReceiptDelete(receipt);
+              this.loadData();
           });
         }
       }
