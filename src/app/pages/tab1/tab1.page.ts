@@ -45,12 +45,17 @@ export class Tab1Page implements OnInit {
       component:  UpdaterecordComponent,
       cssClass: 'my-custom-class',
       componentProps: {
-          id: record.Id,
-          type: record.User,
-          description: record.Description,
-          amount: record.Amount,
+          record,
       }
     });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        const result = dataReturned.data as CheckStatus;
+        this.loadData();
+      }
+    });
+
     return await modal.present();
   }
 

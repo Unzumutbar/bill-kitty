@@ -1,7 +1,9 @@
+import { CheckStatus, Record, User } from '../../shared/models';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ModalController } from '@ionic/angular';
+import { defaultUsers } from '../../shared/lists';
 
 @Component({
   selector: 'app-updaterecord',
@@ -9,31 +11,34 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./updaterecord.component.scss'],
 })
 export class UpdaterecordComponent implements OnInit {
-  @Input() id: string;
-  @Input() type: string;
-  @Input() description: string;
-  @Input() amount: number;
+  @Input() public record: Record;
+  public users: User[];
 
   constructor(
     private firestore: AngularFirestore,
     private modalController: ModalController,
   ) { }
 
-  ngOnInit() {
+  public ngOnInit() {
+    this.users = defaultUsers;
   }
 
   // tslint:disable: no-string-literal
-  public UpdateRecord(type, description, amount){
+  public updateRecord(){
     const updaterecord = {};
-    updaterecord['type'] = type,
-    updaterecord['description'] = description,
-    updaterecord['amount'] = amount,
-    this.firestore.doc('/Records/' + this.id).update(updaterecord).then(() => {
-      this.modalController.dismiss();
+    updaterecord['user'] = this.record.User.Name,
+    updaterecord['description'] = this.record.Description,
+    updaterecord['amount'] = this.record.Amount,
+    this.firestore.doc('/Records/' + this.record.Id).update(updaterecord).then(() => {
+      this.closeModal(CheckStatus.Approve);
     });
   }
 
-  CloseModal(){
-    this.modalController.dismiss();
+  public onDismiss() {
+    this.closeModal(CheckStatus.Dismiss);
+  }
+
+  public async closeModal(status: CheckStatus) {
+    await this.modalController.dismiss(status);
   }
 }
