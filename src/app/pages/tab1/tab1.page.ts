@@ -1,4 +1,4 @@
-import { Bill, CheckStatus, Receipt } from '../../shared/models';
+import { Bill, CheckStatus, Receipt, SecretAudio } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -139,5 +139,9 @@ export class Tab1Page implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  public playAudio(){
+    SecretAudio.play();
   }
 }

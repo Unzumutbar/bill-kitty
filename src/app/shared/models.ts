@@ -21,3 +21,12 @@ export enum LogType {
     LoginSuccess,
     LoginFailed
 }
+
+export class SecretAudio {
+    public static play(){
+        const  audio = new Audio();
+        audio.src = '../../assets/audio/cat-song.mp3';
+        audio.load();
+        audio.play();
+    }
+}
