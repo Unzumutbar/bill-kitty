@@ -1,0 +1,57 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-title>
+      <div class="center-full">
+        <ion-icon
+          src="../../../assets/icon/md-cat-white.svg"
+          class="title-icon"
+        ></ion-icon
+        >Bill Kitty
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="dialog-font-size">
+  <ion-row class="center-full ion-margin-top">
+    <ion-col size="12" class="ion-text-left">
+      Folgende Beträge müssen mit <ion-label color="success">{{creditorBill.User.Name}}</ion-label> beglichen werden:
+    </ion-col>
+  </ion-row>
+
+  <ion-row
+    *ngFor="let splitBill of debtorBills"
+    class="center-full ion-margin-top"
+  >
+    <ion-col size="1" class="ion-text-center">
+      <ion-icon [name]="splitBill.User.Icon"></ion-icon>
+    </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{splitBill.User.Name}} </ion-col>
+    <ion-col size="6" class="ion-text-right">
+      <ion-label color="danger">
+        {{splitBill.OpenAmount*-1 | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
+      </ion-label>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="center-full">
+    <ion-col size="12" class="ion-text-left ion-margin-top">
+      Sollen die Beträge abgerechnet werden?
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-item lines="none">
+    <ion-col class="ion-text-center">
+      <ion-button size="large" expand="block" (click)="onApprove()"
+        >Ja</ion-button
+      >
+    </ion-col>
+    <ion-col class="ion-text-center">
+      <ion-button size="large" expand="block" (click)="onDismiss()"
+        >Nein</ion-button
+      >
+    </ion-col>
+  </ion-item>
+</ion-footer>

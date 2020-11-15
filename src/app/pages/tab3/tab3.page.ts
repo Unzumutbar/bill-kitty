@@ -14,7 +14,7 @@ import { ModalController } from '@ionic/angular';
 export class Tab3Page implements OnInit {
   public bills: Bill[];
   public page = 0;
-  public pageSize = 20;
+  public pageSize = 10;
   public firstInResponse: any;
   public lastInResponse: any;
   public firstInPreviousResponse: any;

@@ -8,20 +8,20 @@
 
 <ion-content>
   <h2 class="ion-text-center">Übersicht</h2>
-  <ion-row class="ion-text-center" class="header-row">
-    <ion-col size="1" class="ion-text-center"></ion-col>
-    <ion-col size="3" class="ion-text-left"> Person </ion-col>
-    <ion-col size="3" class="ion-text-right"> Bezahlt </ion-col>
-    <ion-col size="3" class="ion-text-right"> Anteil </ion-col>
-    <ion-col size="2" class="ion-text-right"> Offen </ion-col>
+  <ion-row class="ion-text-center" class="header-row col-extend">
+    <ion-col size="2" class="ion-text-center"></ion-col>
+    <ion-col size="7" class="ion-text-left"> Person </ion-col>
+    <ion-col size="5" class="ion-text-right"> Bezahlt </ion-col>
+    <ion-col size="5" class="ion-text-right"> Anteil </ion-col>
+    <ion-col size="5" class="ion-text-right"> Offen </ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let splitBill of bill.SplitBills" class="data-row">
-    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="splitBill.User.Icon"></ion-icon> </ion-col>
-    <ion-col size="3" class="ion-text-left"> {{splitBill.User.Name}} </ion-col>
-    <ion-col size="3" class="ion-text-right"> {{splitBill.PayedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
-    <ion-col size="3" class="ion-text-right"> {{splitBill.SharedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
-    <ion-col size="2" class="ion-text-right">
+  <ion-row *ngFor="let splitBill of bill.SplitBills" class="data-row col-extend center-full">
+    <ion-col size="2" class="ion-text-center"> <ion-icon [name]="splitBill.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="7" class="ion-text-left"> {{splitBill.User.Name}} </ion-col>
+    <ion-col size="5" class="ion-text-right"> {{splitBill.PayedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+    <ion-col size="5" class="ion-text-right"> {{splitBill.SharedAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+    <ion-col size="5" class="ion-text-right">
       <ion-label *ngIf="splitBill.OpenAmount < 0" color="danger">
         {{splitBill.OpenAmount | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
       </ion-label>
@@ -41,20 +41,20 @@
   </ion-button>
 
   <h2 class="ion-text-center">Quittungen</h2>
-  <ion-row class="ion-text-center" class="header-row">
-    <ion-col size="1" class="ion-text-center"></ion-col>
-    <ion-col size="3" class="ion-text-center"> Datum </ion-col>
-    <ion-col size="3" class="ion-text-left"> Hinweis </ion-col>
-    <ion-col size="2" class="ion-text-right"> Betrag </ion-col>
-    <ion-col size="3" class="ion-text-center align-items-center"> </ion-col>
+  <ion-row class="ion-text-center" class="header-row col-extend">
+    <ion-col size="2" class="ion-text-center"></ion-col>
+    <ion-col size="6" class="ion-text-center"> Datum </ion-col>
+    <ion-col size="5" class="ion-text-left"> Hinweis </ion-col>
+    <ion-col size="5" class="ion-text-right"> Betrag </ion-col>
+    <ion-col size="6" class="ion-text-center align-items-center"> </ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let record of bill.Records;" class="data-row">
-    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="record.User.Icon"></ion-icon> </ion-col>
-    <ion-col size="3" class="ion-text-center"> {{record.DisplayDate}} </ion-col>
-    <ion-col size="3" class="ion-text-left"> {{record.Description}} </ion-col>
-    <ion-col size="2" class="ion-text-right"> {{record.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
-    <ion-col size="3" class="ion-text-right">
+  <ion-row *ngFor="let record of bill.Records;" class="data-row col-extend center-full">
+    <ion-col size="2" class="ion-text-center"> <ion-icon [name]="record.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="6" class="ion-text-center"> {{record.DisplayDate}} </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{record.Description}} </ion-col>
+    <ion-col size="5" class="ion-text-right"> {{record.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+    <ion-col size="6" class="ion-text-right">
       <ion-button size="small" color="primary" (click)="updateRecord(record)">
         <ion-icon name="create-outline"></ion-icon>
       </ion-button>
