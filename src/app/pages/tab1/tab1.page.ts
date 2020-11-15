@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ConfirmBillPage } from '../confirm-bill/confirm-bill.page';
+import { DeleteReceiptPage } from '../delete-receipt/delete-receipt.page';
 import { ModalController } from '@ionic/angular';
 import { NotificationService } from '../../services/notification.service';
 import { UpdaterecordComponent } from '../../components/updaterecord/updaterecord.component';
@@ -38,29 +39,6 @@ export class Tab1Page implements OnInit {
         this.bill.Init(receipts);
       }
     });
-  }
-
-  public async updateReceipt(receipt: Receipt) {
-    const modal = await this.modalController.create({
-      component:  UpdaterecordComponent,
-      cssClass: 'my-custom-class',
-      componentProps: {
-          receipt,
-      }
-    });
-
-    modal.onDidDismiss().then((dataReturned) => {
-      if (dataReturned !== null) {
-        const result = dataReturned.data as CheckStatus;
-        this.loadData();
-      }
-    });
-
-    return await modal.present();
-  }
-
-  public deleteReceipt(id: string){
-    this.firestore.doc('/Receipts/' + id).delete();
   }
 
   // tslint:disable: no-string-literal
@@ -117,4 +95,45 @@ export class Tab1Page implements OnInit {
     this.firestore.doc('/Receipts/' + receiptId).update(receiptDocument);
   }
 
+  public async updateReceipt(receipt: Receipt) {
+    const modal = await this.modalController.create({
+      component:  UpdaterecordComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+          receipt,
+      }
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        const result = dataReturned.data as CheckStatus;
+        this.loadData();
+      }
+    });
+
+    return await modal.present();
+  }
+
+  public async deleteReceipt(receipt: Receipt){
+    const modal = await this.modalController.create({
+      component:  DeleteReceiptPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+          receipt,
+      }
+    });
+
+    modal.onDidDismiss().then((dataReturned) => {
+      if (dataReturned !== null) {
+        const result = dataReturned.data as CheckStatus;
+        if (result === CheckStatus.Approve) {
+          this.firestore.doc('/Receipts/' + receipt.Id).delete().then(
+            () => {this.loadData();
+          });
+        }
+      }
+    });
+
+    return await modal.present();
+  }
 }

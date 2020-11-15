@@ -6,37 +6,34 @@
           src="../../../assets/icon/md-cat-white.svg"
           class="title-icon"
         ></ion-icon
-        >Abrrechnung durchführen
+        >Quittung löschen
       </div>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="dialog-font-size">
-  <ion-row class="center-full ion-margin-top">
-    <ion-col size="12" class="ion-text-left">
-      Folgende Beträge müssen mit <ion-label color="success">{{creditorBill.User.Name}}</ion-label> beglichen werden:
-    </ion-col>
-  </ion-row>
-
-  <ion-row
-    *ngFor="let splitBill of debtorBills"
-    class="center-full ion-margin-top"
-  >
-    <ion-col size="1" class="ion-text-center">
-      <ion-icon [name]="splitBill.User.Icon"></ion-icon>
-    </ion-col>
-    <ion-col size="5" class="ion-text-left"> {{splitBill.User.Name}} </ion-col>
-    <ion-col size="6" class="ion-text-right">
-      <ion-label color="danger">
-        {{splitBill.OpenAmount*-1 | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
-      </ion-label>
+  <ion-row class="ion-text-center ion-margin-top">
+    <ion-col size="10" class="ion-text-center">
+      Soll die Quittung wirklich gelöscht werden?
     </ion-col>
   </ion-row>
 
   <ion-row class="center-full">
-    <ion-col size="12" class="ion-text-left ion-margin-top">
-      Sollen die Beträge abgerechnet werden?
+    <ion-col size="1" class="ion-text-center">
+      <ion-icon [name]="receipt.User.Icon"></ion-icon>
+    </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{receipt.User.Name}} </ion-col>
+    <ion-col size="5" class="ion-text-right"> {{receipt.DisplayDate}} </ion-col>
+  </ion-row>
+  <ion-row class="center-full">
+    <ion-col size="5" offset="1" class="ion-text-left">
+      {{receipt.Description}}
+    </ion-col>
+    <ion-col size="5" class="ion-text-right">
+      <ion-label color="danger">
+        {{receipt.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}}
+      </ion-label>
     </ion-col>
   </ion-row>
 </ion-content>

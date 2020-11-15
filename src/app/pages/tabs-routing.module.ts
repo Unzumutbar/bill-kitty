@@ -49,6 +49,10 @@ const routes: Routes = [
     path: 'confirm-bill',
     loadChildren: () => import('./confirm-bill/confirm-bill.module').then( m => m.ConfirmBillPageModule),
     canActivate: [AuthGuardService]
+  },
+  {
+    path: 'delete-receipt',
+    loadChildren: () => import('./delete-receipt/delete-receipt.module').then( m => m.DeleteReceiptPageModule)
   }
 ];
 
