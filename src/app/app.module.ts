@@ -1,6 +1,7 @@
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { LOCALE_ID, NgModule } from '@angular/core';
 
+import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { environment } from 'src/environments/environment';
 import localDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
+
 registerLocaleData(localDe);
 
 
@@ -23,6 +25,7 @@ registerLocaleData(localDe);
     IonicModule.forRoot(),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
     AngularFirestoreModule,
   ],
   providers: [
