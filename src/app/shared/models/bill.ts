@@ -1,5 +1,5 @@
 import { DocumentChangeAction } from '@angular/fire/firestore';
-import { Record } from './record';
+import { Receipt } from './receipt';
 import { SplitBill } from './split-bill';
 import { User } from './user';
 import { defaultUsers } from '../lists';
@@ -9,24 +9,24 @@ export class Bill {
 
     public Id: string;
     public TimeStamp: number;
-    public RecordCount: number;
+    public ReceiptCount: number;
     public TotalAmount: number;
     public StartDate: Date;
     public EndDate: Date;
 
     constructor(){
-        this.records = [];
+        this.receipts = [];
         this.TotalAmount = 0;
-        this.RecordCount = 0;
+        this.ReceiptCount = 0;
     }
 
-    private records: Record[] = [];
-    get Records(): Record[] {
-        if (this.records === null || this.records === undefined || this.records.length <= 0) {
+    private receipts: Receipt[] = [];
+    get Receipts(): Receipt[] {
+        if (this.receipts === null || this.receipts === undefined || this.receipts.length <= 0) {
             return [];
         }
 
-        return this.records;
+        return this.receipts;
     }
 
     private splitBills: SplitBill[] = [];
@@ -45,7 +45,7 @@ export class Bill {
 
         bill.Id = billDoc.id;
         bill.TimeStamp = billDoc.data()['timestamp'];
-        bill.RecordCount = billDoc.data()['recordCount'];
+        bill.ReceiptCount = billDoc.data()['receiptCount'];
         bill.TotalAmount = billDoc.data()['totalamount'];
         bill.StartDate = new Date(billDoc.data()['startdate']);
         bill.EndDate = new Date(billDoc.data()['enddate']);
@@ -53,20 +53,20 @@ export class Bill {
         return bill;
     }
 
-    public Init(records: Record[]) {
-        if (records === null || records === undefined || records.length <= 0) {
+    public Init(receipt: Receipt[]) {
+        if (receipt === null || receipt === undefined || receipt.length <= 0) {
             return;
         }
 
-        this.records = this.getRecordsSortedByDate(records);
-        this.StartDate = new Date(this.records[0].TimeStamp);
-        this.EndDate = new Date(this.records[this.records.length - 1].TimeStamp);
-        this.RecordCount = this.records.length;
-        this.splitBills = this.splitTheBillAndGetTotal(this.records);
+        this.receipts = this.getReceiptsSortedByDate(receipt);
+        this.StartDate = new Date(this.receipts[0].TimeStamp);
+        this.EndDate = new Date(this.receipts[this.receipts.length - 1].TimeStamp);
+        this.ReceiptCount = this.receipts.length;
+        this.splitBills = this.splitTheBillAndGetTotal(this.receipts);
     }
 
-    private getRecordsSortedByDate(records: Record[]): Record[] {
-        return records.sort((n1, n2) => {
+    private getReceiptsSortedByDate(receipt: Receipt[]): Receipt[] {
+        return receipt.sort((n1, n2) => {
             const firstDate = new Date(n1.Date);
             const secondDate = new Date(n2.Date);
             if (firstDate > secondDate) {
@@ -79,36 +79,36 @@ export class Bill {
         });
     }
 
-    private splitTheBillAndGetTotal(records: Record[]): SplitBill[] {
+    private splitTheBillAndGetTotal(receipts: Receipt[]): SplitBill[] {
         this.TotalAmount = 0;
         const splitBills: SplitBill[] = [];
-        const users = this.getUser(records);
+        const users = this.getUser(receipts);
         for (const user of users) {
             splitBills.push(new SplitBill(user));
         }
 
-        for (const record of records) {
-            const splitAmount = record.Amount / splitBills.length;
+        for (const receipt of receipts) {
+            const splitAmount = receipt.Amount / splitBills.length;
             for (const split of splitBills) {
                 split.SharedAmount += splitAmount;
-                if (split.User === record.User) {
-                    split.PayedAmount += record.Amount;
+                if (split.User === receipt.User) {
+                    split.PayedAmount += receipt.Amount;
                 }
             }
-            this.TotalAmount += record.Amount;
+            this.TotalAmount += receipt.Amount;
         }
         return splitBills;
     }
 
-    private getUser(records: Record[]): User[] {
+    private getUser(receipts: Receipt[]): User[] {
         const users: User[] = [];
         for (const user of defaultUsers) {
             users.push(user);
         }
 
-        for (const record of records) {
-          if (!users.some(u => u === record.User)){
-            users.push(record.User);
+        for (const receipt of receipts) {
+          if (!users.some(u => u === receipt.User)){
+            users.push(receipt.User);
           }
         }
 

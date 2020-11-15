@@ -21,7 +21,7 @@
     <ion-col size="12">
       <ion-item>
         <ion-datetime
-          [(ngModel)]="record.Date"
+          [(ngModel)]="receipt.Date"
           displayFormat="DD.MM.YYYY"
           placeholder="Datum"
         >
@@ -29,7 +29,7 @@
       </ion-item>
     </ion-col>
     <ion-col size="12">
-      <ion-select [(ngModel)]="record.User" placeholder="Person">
+      <ion-select [(ngModel)]="receipt.User" placeholder="Person">
         <ion-select-option *ngFor="let user of users" [value]="user">
           {{ user.Name }}
         </ion-select-option>
@@ -38,7 +38,7 @@
     <ion-col size="12">
       <ion-item>
         <ion-input
-          [(ngModel)]="record.Description"
+          [(ngModel)]="receipt.Description"
           placeholder="Beschreibung"
         ></ion-input>
       </ion-item>
@@ -46,7 +46,7 @@
     <ion-col size="12">
       <ion-item>
         <ion-input
-          [(ngModel)]="record.Amount"
+          [(ngModel)]="receipt.Amount"
           placeholder="Betrag(€)"
           type="number"
         ></ion-input>
@@ -58,7 +58,7 @@
 <ion-footer>
   <ion-item lines="none">
     <ion-col class="ion-text-center">
-      <ion-button expand="block" color="success" (click)="updateRecord()"
+      <ion-button expand="block" color="success" (click)="updateReceipt()"
         >Aktualisieren</ion-button
       >
     </ion-col>

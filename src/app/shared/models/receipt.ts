@@ -3,7 +3,7 @@ import { User } from './user';
 import { defaultUsers } from '../lists';
 import { formatDate } from '@angular/common';
 
-export class Record {
+export class Receipt {
     public Id: string;
     public TimeStamp: number;
     public User: User = null;
@@ -48,22 +48,22 @@ export class Record {
     }
 
     // tslint:disable: no-string-literal
-    public static Map(e: DocumentChangeAction<unknown>): Record {
-        const record = new Record();
-        record.Id = e.payload.doc.id;
-        record.TimeStamp = e.payload.doc.data()['timestamp'];
+    public static Map(e: DocumentChangeAction<unknown>): Receipt {
+        const receipt = new Receipt();
+        receipt.Id = e.payload.doc.id;
+        receipt.TimeStamp = e.payload.doc.data()['timestamp'];
 
         const userName = e.payload.doc.data()['user'];
-        record.User = defaultUsers.find(u => u.Name === userName);
-        if (!record.User){
-            record.User = new User();
-            record.User.Name = userName;
-            record.User.Icon = 'nutrition-outline';
+        receipt.User = defaultUsers.find(u => u.Name === userName);
+        if (!receipt.User){
+            receipt.User = new User();
+            receipt.User.Name = userName;
+            receipt.User.Icon = 'nutrition-outline';
         }
 
-        record.Description = e.payload.doc.data()['description'];
-        record.Amount = e.payload.doc.data()['amount'];
-        record.BillId = e.payload.doc.data()['billId'];
-        return record;
+        receipt.Description = e.payload.doc.data()['description'];
+        receipt.Amount = e.payload.doc.data()['amount'];
+        receipt.BillId = e.payload.doc.data()['billId'];
+        return receipt;
     }
 }

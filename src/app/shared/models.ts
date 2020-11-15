@@ -1,5 +1,5 @@
 export * from './models/bill';
-export * from './models/record';
+export * from './models/receipt';
 export * from './models/split-bill';
 export * from './models/user';
 export * from './models/fire-user';

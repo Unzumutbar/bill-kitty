@@ -46,10 +46,10 @@
     <ion-col size="3" class="ion-text-right"> Betrag </ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let record of bill.Records" class="data-row">
-    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="record.User.Icon"></ion-icon> </ion-col>
-    <ion-col size="3" class="ion-text-center"> {{record.DisplayDate}} </ion-col>
-    <ion-col size="5" class="ion-text-left"> {{record.Description}} </ion-col>
-    <ion-col size="3" class="ion-text-right"> {{record.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+  <ion-row *ngFor="let receipt of bill.Receipts" class="data-row">
+    <ion-col size="1" class="ion-text-center"> <ion-icon [name]="receipt.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="3" class="ion-text-center"> {{receipt.DisplayDate}} </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{receipt.Description}} </ion-col>
+    <ion-col size="3" class="ion-text-right"> {{receipt.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
   </ion-row>
 </ion-content>

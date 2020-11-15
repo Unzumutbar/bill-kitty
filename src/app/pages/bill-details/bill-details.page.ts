@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Bill, Record } from '../../shared/models';
+import { Bill, Receipt } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -33,14 +33,14 @@ export class BillDetailsPage implements OnInit {
   private loadData(){
     this.bill = new Bill();
     this.firestore
-      .collection('/Records/', ref => ref.where('billId', '==', this.id))
+      .collection('/Receipts/', ref => ref.where('billId', '==', this.id))
       .snapshotChanges()
       .subscribe(res => {
       if (res){
-        const records = res.map(e => {
-          return Record.Map(e);
+        const receipts = res.map(e => {
+          return Receipt.Map(e);
         });
-        this.bill.Init(records);
+        this.bill.Init(receipts);
       }
     });
   }

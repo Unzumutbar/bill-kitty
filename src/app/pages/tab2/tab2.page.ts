@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Record, User } from '../../shared/models';
+import { Receipt, User } from '../../shared/models';
 
 import { AngularFirestore } from '@angular/fire/firestore';
 import { NotificationService } from '../../services/notification.service';
@@ -12,7 +12,7 @@ import { formatDate } from '@angular/common';
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page implements OnInit {
-  public newRecord: Record;
+  public newReceipt: Receipt;
   public users: User[];
 
   constructor(
@@ -22,40 +22,40 @@ export class Tab2Page implements OnInit {
 
   public ngOnInit(){
     this.users = defaultUsers;
-    this.newRecord = this.getDefaultRecord();
-    this.newRecord.Date = this.getDateString(new Date());
+    this.newReceipt = this.getDefaultReceipt();
+    this.newReceipt.Date = this.getDateString(new Date());
   }
 
   // tslint:disable: no-string-literal
-  public async addRecord(recordToAdd: Record){
+  public async addReceipt(receiptToAdd: Receipt){
     const spinner = await this.notify.showSpinner('Speichere Quittung');
-    const addrecord = {};
-    addrecord['timestamp'] = new Date(recordToAdd.Date).getTime();
-    addrecord['user'] = recordToAdd.User.Name;
-    addrecord['description'] = recordToAdd.Description;
-    addrecord['amount'] = recordToAdd.Amount;
-    addrecord['billId'] = recordToAdd.BillId;
+    const addreceipt = {};
+    addreceipt['timestamp'] = new Date(receiptToAdd.Date).getTime();
+    addreceipt['user'] = receiptToAdd.User.Name;
+    addreceipt['description'] = receiptToAdd.Description;
+    addreceipt['amount'] = receiptToAdd.Amount;
+    addreceipt['billId'] = receiptToAdd.BillId;
 
-    this.firestore.collection('/Records/').add(addrecord).then(async () => {
-      this.newRecord = this.getDefaultRecord();
+    this.firestore.collection('/Receipts/').add(addreceipt).then(async () => {
+      this.newReceipt = this.getDefaultReceipt();
       spinner.hide();
       await this.notify.showSuccess('Quittung erfolgreich hinzugefügt');
     });
   }
 
-  private getDefaultRecord(): Record{
-    const defaultRecord = new Record();
-    defaultRecord.Date = this.getDateString(new Date());
-    defaultRecord.User = this.users[0];
-    defaultRecord.Description = '';
-    defaultRecord.BillId = '';
+  private getDefaultReceipt(): Receipt{
+    const defaultReceipt = new Receipt();
+    defaultReceipt.Date = this.getDateString(new Date());
+    defaultReceipt.User = this.users[0];
+    defaultReceipt.Description = '';
+    defaultReceipt.BillId = '';
 
-    if (this.newRecord !== null && this.newRecord !== undefined) {
-      defaultRecord.User = this.newRecord.User;
-      defaultRecord.Description = this.newRecord.Description;
+    if (this.newReceipt !== null && this.newReceipt !== undefined) {
+      defaultReceipt.User = this.newReceipt.User;
+      defaultReceipt.Description = this.newReceipt.Description;
     }
 
-    return defaultRecord;
+    return defaultReceipt;
   }
 
   private getDateString(date: Date): string {
@@ -65,8 +65,8 @@ export class Tab2Page implements OnInit {
   }
 
   get InputInvalid(): boolean {
-    return !((this.newRecord.User !== null || this.newRecord.User !== undefined) &&
-      (this.newRecord.Date !== null || this.newRecord.Date !== undefined) &&
-      this.newRecord.Amount > 0);
+    return !((this.newReceipt.User !== null || this.newReceipt.User !== undefined) &&
+      (this.newReceipt.Date !== null || this.newReceipt.Date !== undefined) &&
+      this.newReceipt.Amount > 0);
   }
 }

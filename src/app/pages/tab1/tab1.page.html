@@ -49,16 +49,16 @@
     <ion-col size="6" class="ion-text-center align-items-center"> </ion-col>
   </ion-row>
 
-  <ion-row *ngFor="let record of bill.Records;" class="data-row col-extend center-full">
-    <ion-col size="2" class="ion-text-center"> <ion-icon [name]="record.User.Icon"></ion-icon> </ion-col>
-    <ion-col size="6" class="ion-text-center"> {{record.DisplayDate}} </ion-col>
-    <ion-col size="5" class="ion-text-left"> {{record.Description}} </ion-col>
-    <ion-col size="5" class="ion-text-right"> {{record.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
+  <ion-row *ngFor="let receipt of bill.Receipts;" class="data-row col-extend center-full">
+    <ion-col size="2" class="ion-text-center"> <ion-icon [name]="receipt.User.Icon"></ion-icon> </ion-col>
+    <ion-col size="6" class="ion-text-center"> {{receipt.DisplayDate}} </ion-col>
+    <ion-col size="5" class="ion-text-left"> {{receipt.Description}} </ion-col>
+    <ion-col size="5" class="ion-text-right"> {{receipt.Amount | currency:'EUR':'symbol':'1.2-2':'de-DE'}} </ion-col>
     <ion-col size="6" class="ion-text-right">
-      <ion-button size="small" color="primary" (click)="updateRecord(record)">
+      <ion-button size="small" color="primary" (click)="updateReceipt(receipt)">
         <ion-icon name="create-outline"></ion-icon>
       </ion-button>
-      <ion-button size="small" color="danger" (click)="deleteRecord(record.Id)">
+      <ion-button size="small" color="danger" (click)="deleteReceipt(receipt.Id)">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
     </ion-col>

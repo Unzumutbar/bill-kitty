@@ -1,4 +1,4 @@
-import { Bill, CheckStatus, Record } from '../../shared/models';
+import { Bill, CheckStatus, Receipt } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -28,24 +28,24 @@ export class Tab1Page implements OnInit {
   private loadData(){
     this.bill = new Bill();
     this.firestore
-      .collection('/Records/', ref => ref.where('billId', '==', ''))
+      .collection('/Receipts/', ref => ref.where('billId', '==', ''))
       .snapshotChanges()
       .subscribe(res => {
       if (res){
-        const records = res.map(e => {
-          return Record.Map(e);
+        const receipts = res.map(e => {
+          return Receipt.Map(e);
         });
-        this.bill.Init(records);
+        this.bill.Init(receipts);
       }
     });
   }
 
-  public async updateRecord(record: Record) {
+  public async updateReceipt(receipt: Receipt) {
     const modal = await this.modalController.create({
       component:  UpdaterecordComponent,
       cssClass: 'my-custom-class',
       componentProps: {
-          record,
+          receipt,
       }
     });
 
@@ -59,8 +59,8 @@ export class Tab1Page implements OnInit {
     return await modal.present();
   }
 
-  public deleteRecord(id: string){
-    this.firestore.doc('/Records/' + id).delete();
+  public deleteReceipt(id: string){
+    this.firestore.doc('/Receipts/' + id).delete();
   }
 
   // tslint:disable: no-string-literal
@@ -69,14 +69,14 @@ export class Tab1Page implements OnInit {
       if (check === CheckStatus.Approve) {
         const newBillDocument = {};
         newBillDocument['timestamp'] = new Date().getTime();
-        newBillDocument['recordCount'] = this.bill.RecordCount;
+        newBillDocument['receiptCount'] = this.bill.ReceiptCount;
         newBillDocument['totalamount'] = this.bill.TotalAmount;
         newBillDocument['startdate'] = this.bill.StartDate.getTime();
         newBillDocument['enddate'] = this.bill.EndDate.getTime();
 
         this.firestore.collection('/Bills/').add(newBillDocument).then(billDoc => {
-          for (const rec of this.bill.Records) {
-            this.addBillIdToRecord(rec.Id, billDoc.id);
+          for (const rec of this.bill.Receipts) {
+            this.addBillIdToReceipt(rec.Id, billDoc.id);
           }
           this.notify.showSuccess('Abrechnung erfolgreich durchgeführt');
           this.loadData();
@@ -111,10 +111,10 @@ export class Tab1Page implements OnInit {
     return result;
   }
 
-  private addBillIdToRecord(recordId: string, billId: string){
-    const recordDocument = {};
-    recordDocument['billId'] = billId;
-    this.firestore.doc('/Records/' + recordId).update(recordDocument);
+  private addBillIdToReceipt(receiptId: string, billId: string){
+    const receiptDocument = {};
+    receiptDocument['billId'] = billId;
+    this.firestore.doc('/Receipts/' + receiptId).update(receiptDocument);
   }
 
 }
