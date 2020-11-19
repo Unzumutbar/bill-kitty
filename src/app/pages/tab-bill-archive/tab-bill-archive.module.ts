@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Tab3Page } from './tab3.page';
-import { Tab3PageRoutingModule } from './tab3-routing.module';
+import { TabBillArchivePage } from './tab-bill-archive.page';
+import { TabBillArchivePageRoutingModule } from './tab-bill-archive-routing.module';
 
 @NgModule({
   imports: [
@@ -14,9 +14,9 @@ import { Tab3PageRoutingModule } from './tab3-routing.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    RouterModule.forChild([{ path: '', component: Tab3Page }]),
-    Tab3PageRoutingModule,
+    RouterModule.forChild([{ path: '', component: TabBillArchivePage }]),
+    TabBillArchivePageRoutingModule,
   ],
-  declarations: [Tab3Page]
+  declarations: [TabBillArchivePage]
 })
-export class Tab3PageModule {}
+export class TabBillArchivePageModule {}

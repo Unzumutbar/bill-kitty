@@ -7,11 +7,11 @@ import { defaultUsers } from '../../shared/lists';
 import { formatDate } from '@angular/common';
 
 @Component({
-  selector: 'app-tab2',
-  templateUrl: 'tab2.page.html',
-  styleUrls: ['tab2.page.scss']
+  selector: 'app-tab-add-receipt',
+  templateUrl: 'tab-add-receipt.page.html',
+  styleUrls: ['tab-add-receipt.page.scss']
 })
-export class Tab2Page implements OnInit {
+export class TabAddReceiptPage implements OnInit {
   public newReceipt: Receipt;
   public users: User[];
 

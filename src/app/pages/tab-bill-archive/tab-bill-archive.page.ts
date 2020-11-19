@@ -6,12 +6,12 @@ import { Bill } from '../../shared/models';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  selector: 'app-tab-bill-archive',
+  templateUrl: 'tab-bill-archive.page.html',
+  styleUrls: ['tab-bill-archive.page.scss']
 })
 
-export class Tab3Page implements OnInit {
+export class TabBillArchivePage implements OnInit {
   public bills: Bill[];
   public page = 0;
   public pageSize = 10;

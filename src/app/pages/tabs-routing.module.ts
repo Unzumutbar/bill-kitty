@@ -11,17 +11,17 @@ const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('../pages/tab1/tab1.module').then(m => m.Tab1PageModule),
+        loadChildren: () => import('../pages/tab-bill-dashboard/tab-bill-dashboard.module').then(m => m.TabBillDashboardPageModule),
         canActivate: [AuthGuardService]
       },
       {
         path: 'receipt',
-        loadChildren: () => import('../pages/tab2/tab2.module').then(m => m.Tab2PageModule),
+        loadChildren: () => import('../pages/tab-add-receipt/tab-add-receipt.module').then(m => m.TabAddReceiptPageModule),
         canActivate: [AuthGuardService]
       },
       {
         path: 'archive',
-        loadChildren: () => import('../pages/tab3/tab3.module').then(m => m.Tab3PageModule),
+        loadChildren: () => import('../pages/tab-bill-archive/tab-bill-archive.module').then(m => m.TabBillArchivePageModule),
         canActivate: [AuthGuardService]
       },
       {

@@ -3,8 +3,8 @@ import { ExploreContainerComponentModule } from '../../shared/explore-container/
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
-import { Tab2Page } from './tab2.page';
-import { Tab2PageRoutingModule } from './tab2-routing.module';
+import { TabAddReceiptPage } from './tab-add-receipt.page';
+import { TabAddReceiptPageRoutingModule } from './tab-add-receipt-routing.module';
 
 @NgModule({
   imports: [
@@ -12,9 +12,9 @@ import { Tab2PageRoutingModule } from './tab2-routing.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    Tab2PageRoutingModule
+    TabAddReceiptPageRoutingModule
   ],
 
-  declarations: [Tab2Page]
+  declarations: [TabAddReceiptPage]
 })
-export class Tab2PageModule {}
+export class TabAddReceiptPageModule {}

@@ -10,11 +10,11 @@ import { NotificationService } from '../../services/notification.service';
 import { UpdaterecordComponent } from '../../components/updaterecord/updaterecord.component';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  selector: 'app-tab-bill-dashboard',
+  templateUrl: 'tab-bill-dashboard.page.html',
+  styleUrls: ['tab-bill-dashboard.page.scss']
 })
-export class Tab1Page implements OnInit {
+export class TabBillDashboardPage implements OnInit {
   public bill: Bill;
 
   constructor(
