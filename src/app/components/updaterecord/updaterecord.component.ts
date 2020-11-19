@@ -28,6 +28,7 @@ export class UpdaterecordComponent implements OnInit {
   // tslint:disable: no-string-literal
   public updateReceipt(){
     const updateReceipt = {};
+    updateReceipt['timestamp'] = new Date(this.receipt.Date).getTime();
     updateReceipt['user'] = this.receipt.User.Name,
     updateReceipt['description'] = this.receipt.Description,
     updateReceipt['amount'] = this.receipt.Amount,
