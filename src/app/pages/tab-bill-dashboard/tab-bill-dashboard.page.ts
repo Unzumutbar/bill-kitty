@@ -1,10 +1,10 @@
-import { Bill, CheckStatus, Receipt, SecretAudio } from '../../shared/models';
+import { Bill, Receipt, SecretAudio } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 
-import { AngularFirestore } from '@angular/fire/firestore';
+import { CheckStatus } from '../../shared/enums';
 import { ConfirmBillPage } from '../confirm-bill/confirm-bill.page';
 import { DeleteReceiptPage } from '../delete-receipt/delete-receipt.page';
-import { LogService } from '../../services/log.service';
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { NotificationService } from '../../services/notification.service';
 import { UpdaterecordComponent } from '../../components/updaterecord/updaterecord.component';
@@ -18,49 +18,34 @@ export class TabBillDashboardPage implements OnInit {
   public bill: Bill;
 
   constructor(
-    private firestore: AngularFirestore,
     private modalController: ModalController,
     private notify: NotificationService,
-    private logService: LogService
-  ) {}
+    private firebaseService: FirebaseService
+  ) {
+    this.bill = new Bill();
+  }
 
   public ngOnInit() {
-    this.loadData();
   }
 
-  private loadData(){
-    this.bill = new Bill();
-    this.firestore
-      .collection('/Receipts/', ref => ref.where('billId', '==', ''))
-      .snapshotChanges()
-      .subscribe(res => {
-      if (res){
-        const receipts = res.map(e => {
-          return Receipt.Map(e);
-        });
-        this.bill.Init(receipts);
-      }
-    });
+  public async ionViewWillEnter(): Promise<any>{
+    await this.loadData();
   }
 
-  // tslint:disable: no-string-literal
+  private async loadData(){
+    const spinner = await this.notify.showSpinnerLoadingData();
+
+    this.bill = await this.firebaseService.Bill.getUnpaid();
+
+    await spinner.hide();
+  }
+
   public async createBill(){
     await this.openConfirmBillDialog(this.bill, async (check) => {
       if (check === CheckStatus.Approve) {
-        const newBillDocument = {};
-        newBillDocument['timestamp'] = new Date().getTime();
-        newBillDocument['receiptCount'] = this.bill.ReceiptCount;
-        newBillDocument['totalamount'] = this.bill.TotalAmount;
-        newBillDocument['startdate'] = this.bill.StartDate.getTime();
-        newBillDocument['enddate'] = this.bill.EndDate.getTime();
-
-        this.firestore.collection('/Bills/').add(newBillDocument).then(billDoc => {
-          for (const rec of this.bill.Receipts) {
-            this.addBillIdToReceipt(rec.Id, billDoc.id);
-          }
-          this.notify.showSuccess('Abrechnung erfolgreich durchgeführt');
-          this.loadData();
-        });
+        await this.firebaseService.Bill.add(this.bill);
+        await this.notify.showSuccess('Abrechnung erfolgreich durchgeführt');
+        await this.loadData();
       }
     });
   }
@@ -91,12 +76,6 @@ export class TabBillDashboardPage implements OnInit {
     return result;
   }
 
-  private addBillIdToReceipt(receiptId: string, billId: string){
-    const receiptDocument = {};
-    receiptDocument['billId'] = billId;
-    this.firestore.doc('/Receipts/' + receiptId).update(receiptDocument);
-  }
-
   public async updateReceipt(receipt: Receipt) {
     const modal = await this.modalController.create({
       component:  UpdaterecordComponent,
@@ -106,10 +85,10 @@ export class TabBillDashboardPage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then((dataReturned) => {
+    modal.onDidDismiss().then(async (dataReturned) => {
       if (dataReturned !== null) {
         const result = dataReturned.data as CheckStatus;
-        this.loadData();
+        await this.loadData();
       }
     });
 
@@ -125,15 +104,12 @@ export class TabBillDashboardPage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then((dataReturned) => {
+    modal.onDidDismiss().then(async (dataReturned) => {
       if (dataReturned !== null) {
         const result = dataReturned.data as CheckStatus;
         if (result === CheckStatus.Approve) {
-          this.firestore.doc('/Receipts/' + receipt.Id).delete().then(
-            () => {
-              this.logService.logReceiptDelete(receipt);
-              this.loadData();
-          });
+          await this.firebaseService.Receipt.delete(receipt);
+          await this.loadData();
         }
       }
     });

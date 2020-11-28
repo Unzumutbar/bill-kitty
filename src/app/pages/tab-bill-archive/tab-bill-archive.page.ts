@@ -1,9 +1,10 @@
-import { AngularFirestore, DocumentChangeAction } from '@angular/fire/firestore';
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { Bill } from '../../shared/models';
-import { ModalController } from '@ionic/angular';
+import { FirebaseService } from '../../services/firebase.service';
+import { NotificationService } from '../../services/notification.service';
+import { Pagination } from '../../shared/models/pagination';
 
 @Component({
   selector: 'app-tab-bill-archive',
@@ -13,51 +14,71 @@ import { ModalController } from '@ionic/angular';
 
 export class TabBillArchivePage implements OnInit {
   public bills: Bill[];
-  public page = 0;
-  public pageSize = 10;
-  public firstInResponse: any;
-  public lastInResponse: any;
-  public firstInPreviousResponse: any;
-  public lastInPreviousResponse: any;
+  private pagination: Pagination;
+
+  get page(): number {
+    if (this.pagination.Page === null || this.pagination.Page  === undefined) {
+        return 0;
+    }
+    return this.pagination.Page;
+  }
+
+  get pageSize(): number {
+    if (this.pagination.PageSize === null || this.pagination.PageSize  === undefined) {
+        return 10;
+    }
+    return this.pagination.PageSize;
+  }
 
   constructor(
-    private firestore: AngularFirestore,
-    private modalController: ModalController,
-    public router: Router
-  ) {}
+    public router: Router,
+    private firebaseService: FirebaseService,
+    private notify: NotificationService
+  ) {
+    this.bills = [];
+    this.pagination = new Pagination();
+    this.pagination.PageSize = 10;
+    this.pagination.Data = new Array<Bill>();
+  }
 
   public ngOnInit(){
-    this.loadData();
   }
 
-  public loadData() {
-    this.bills = [];
-    this.firstInResponse = null;
-    this.lastInResponse = null;
-    this.firstInPreviousResponse = null;
-    this.lastInPreviousResponse = null;
-
-    this.firestore
-    .collection('/Bills/', ref => ref.orderBy('timestamp', 'desc')
-    .limit(this.pageSize))
-    .snapshotChanges()
-    .subscribe(res => {
-      if (res){
-        this.prepareBills(res);
-      }
-    });
+  public async ionViewWillEnter(): Promise<any>{
+    await this.firstPage();
   }
 
-  private prepareBills(res: DocumentChangeAction<unknown>[]) {
-    this.firstInPreviousResponse = this.firstInResponse;
-    this.lastInPreviousResponse = this.lastInResponse;
+  public async firstPage() {
+    const spinner = await this.notify.showSpinnerLoadingData();
 
-    this.firstInResponse = res[0].payload.doc;
-    this.lastInResponse = res[res.length - 1].payload.doc;
+    this.pagination = await this.firebaseService.Bill.getFirstPage(this.pagination);
+    this.bills = this.pagination.Data;
 
-    this.bills = res.map(e => {
-      return Bill.Map(e);
-    });
+    await spinner.hide();
+  }
+
+  public async nextPage() {
+    if (this.bills.length < this.pageSize) {
+      return;
+    }
+    const spinner = await this.notify.showSpinnerLoadingData();
+
+    this.pagination = await this.firebaseService.Bill.getNextPage(this.pagination);
+    this.bills = this.pagination.Data;
+
+    await spinner.hide();
+  }
+
+  public async prevPage() {
+    if (this.page < 1) {
+      return;
+    }
+    const spinner = await this.notify.showSpinnerLoadingData();
+
+    this.pagination = await this.firebaseService.Bill.getPreviousPage(this.pagination);
+    this.bills = this.pagination.Data;
+
+    await spinner.hide();
   }
 
   public async viewBill(bill: Bill) {
@@ -67,43 +88,6 @@ export class TabBillArchivePage implements OnInit {
       },
     };
     this.router.navigate(['bill'], navigationExtras);
-  }
-
-  public nextPage() {
-    if (this.bills.length < this.pageSize) {
-      return;
-    }
-
-    this.page++;
-    this.firestore
-    .collection('/Bills/', ref => ref.orderBy('timestamp', 'desc')
-    .startAfter(this.lastInResponse)
-    .limit(this.pageSize))
-    .snapshotChanges()
-    .subscribe(res => {
-      if (res){
-        this.prepareBills(res);
-      }
-    });
-  }
-
-  public prevPage() {
-    if (this.page < 1) {
-      return;
-    }
-
-    this.page--;
-    this.firestore
-    .collection('/Bills/', ref => ref.orderBy('timestamp', 'desc')
-    .startAt(this.firstInPreviousResponse)
-    .endBefore(this.lastInResponse)
-    .limitToLast(this.pageSize))
-    .snapshotChanges()
-    .subscribe(res => {
-      if (res){
-        this.prepareBills(res);
-      }
-    });
   }
 }
 

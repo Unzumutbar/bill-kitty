@@ -1,7 +1,8 @@
-import { CheckStatus, Receipt } from '../../shared/models';
 import { Component, Input, OnInit } from '@angular/core';
 
+import { CheckStatus } from '../../shared/enums';
 import { ModalController } from '@ionic/angular';
+import { Receipt } from '../../shared/models';
 
 @Component({
   selector: 'app-delete-receipt',
@@ -13,7 +14,6 @@ export class DeleteReceiptPage implements OnInit {
   constructor(private modalController: ModalController) { }
 
   public ngOnInit() {
-    console.log(this.receipt);
   }
 
   public onApprove() {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Receipt, User } from '../../shared/models';
 
-import { AngularFirestore } from '@angular/fire/firestore';
+import { FirebaseService } from '../../services/firebase.service';
 import { NotificationService } from '../../services/notification.service';
 import { defaultUsers } from '../../shared/lists';
 import { formatDate } from '@angular/common';
@@ -16,8 +16,8 @@ export class TabAddReceiptPage implements OnInit {
   public users: User[];
 
   constructor(
-    private firestore: AngularFirestore,
-    private notify: NotificationService
+    private notify: NotificationService,
+    private firebaseService: FirebaseService,
   ) {}
 
   public ngOnInit(){
@@ -26,21 +26,13 @@ export class TabAddReceiptPage implements OnInit {
     this.newReceipt.Date = this.getDateString(new Date());
   }
 
-  // tslint:disable: no-string-literal
   public async addReceipt(receiptToAdd: Receipt){
     const spinner = await this.notify.showSpinner('Speichere Quittung');
-    const addreceipt = {};
-    addreceipt['timestamp'] = new Date(receiptToAdd.Date).getTime();
-    addreceipt['user'] = receiptToAdd.User.Name;
-    addreceipt['description'] = receiptToAdd.Description;
-    addreceipt['amount'] = receiptToAdd.Amount;
-    addreceipt['billId'] = receiptToAdd.BillId;
+    await this.firebaseService.Receipt.add(receiptToAdd);
 
-    this.firestore.collection('/Receipts/').add(addreceipt).then(async () => {
-      this.newReceipt = this.getDefaultReceipt();
-      spinner.hide();
-      await this.notify.showSuccess('Quittung erfolgreich hinzugefügt');
-    });
+    this.newReceipt = this.getDefaultReceipt();
+    spinner.hide();
+    await this.notify.showSuccess('Quittung erfolgreich hinzugefügt');
   }
 
   private getDefaultReceipt(): Receipt{

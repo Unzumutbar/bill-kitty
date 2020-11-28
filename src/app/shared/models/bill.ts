@@ -39,6 +39,7 @@ export class Bill {
     }
 
     // tslint:disable: no-string-literal
+    /*
     public static Map(e: DocumentChangeAction<unknown>): Bill {
         const bill = new Bill();
         const billDoc = e.payload.doc;
@@ -52,6 +53,19 @@ export class Bill {
 
         return bill;
     }
+    */
+   public static Map(doc: any): Bill {
+    const bill = new Bill();
+
+    bill.Id = doc.id;
+    bill.TimeStamp = doc.data()['timestamp'];
+    bill.ReceiptCount = doc.data()['receiptCount'];
+    bill.TotalAmount = doc.data()['totalamount'];
+    bill.StartDate = new Date(doc.data()['startdate']);
+    bill.EndDate = new Date(doc.data()['enddate']);
+
+    return bill;
+}
 
     public Init(receipt: Receipt[]) {
         if (receipt === null || receipt === undefined || receipt.length <= 0) {

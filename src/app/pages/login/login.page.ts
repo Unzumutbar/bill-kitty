@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthenticationService } from 'src/app/services/authentication-service';
-import { LogService } from '../../services/log.service';
+import { LogService } from '../../services/data/log.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,11 +22,11 @@ export class LoginPage implements OnInit {
 
   public logIn(email, password) {
     this.authService.SignIn(email.value, password.value)
-      .then(() => {
-        this.logService.logLoginAttempt(email.value, true);
+      .then(async () => {
+        await this.logService.loginAttempt(email.value, true);
         this.router.navigate(['meow/dashboard']);
-      }).catch((error) => {
-        this.logService.logLoginAttempt(email.value, false);
+      }).catch(async (error) => {
+        await this.logService.loginAttempt(email.value, false);
         window.alert(error.message);
       });
   }

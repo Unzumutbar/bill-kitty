@@ -1,8 +1,8 @@
-import { CheckStatus, Receipt, User } from '../../shared/models';
 import { Component, Input, OnInit } from '@angular/core';
+import { Receipt, User } from '../../shared/models';
 
-import { AngularFirestore } from '@angular/fire/firestore';
-import { LogService } from '../../services/log.service';
+import { CheckStatus } from '../../shared/enums';
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { ModalController } from '@ionic/angular';
 import { defaultUsers } from '../../shared/lists';
 
@@ -16,26 +16,17 @@ export class UpdaterecordComponent implements OnInit {
   public users: User[];
 
   constructor(
-    private firestore: AngularFirestore,
     private modalController: ModalController,
-    private log: LogService
+    private firebaseService: FirebaseService
   ) { }
 
   public ngOnInit() {
     this.users = defaultUsers;
   }
 
-  // tslint:disable: no-string-literal
-  public updateReceipt(){
-    const updateReceipt = {};
-    updateReceipt['timestamp'] = new Date(this.receipt.Date).getTime();
-    updateReceipt['user'] = this.receipt.User.Name,
-    updateReceipt['description'] = this.receipt.Description,
-    updateReceipt['amount'] = this.receipt.Amount,
-    this.firestore.doc('/Receipts/' + this.receipt.Id).update(updateReceipt).then(() => {
-      this.log.logReceiptUpdate(this.receipt);
-      this.closeModal(CheckStatus.Approve);
-    });
+  public async updateReceipt(){
+    await this.firebaseService.Receipt.update(this.receipt);
+    this.closeModal(CheckStatus.Approve);
   }
 
   public onDismiss() {

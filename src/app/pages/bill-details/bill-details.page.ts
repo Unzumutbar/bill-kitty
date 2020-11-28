@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Bill, Receipt } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 
-import { AngularFirestore } from '@angular/fire/firestore';
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
   selector: 'app-bill-details',
@@ -15,10 +15,11 @@ export class BillDetailsPage implements OnInit {
   public bill: Bill;
 
   constructor(
-    private firestore: AngularFirestore,
+    private firebaseService: FirebaseService,
     private route: ActivatedRoute,
     private router: Router
   ) {
+    this.bill = new Bill();
     this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
         this.id = this.router.getCurrentNavigation().extras.state.billId;
@@ -27,21 +28,13 @@ export class BillDetailsPage implements OnInit {
   }
 
   public ngOnInit() {
-    this.loadData();
   }
 
-  private loadData(){
-    this.bill = new Bill();
-    this.firestore
-      .collection('/Receipts/', ref => ref.where('billId', '==', this.id))
-      .snapshotChanges()
-      .subscribe(res => {
-      if (res){
-        const receipts = res.map(e => {
-          return Receipt.Map(e);
-        });
-        this.bill.Init(receipts);
-      }
-    });
+  public async ionViewWillEnter(): Promise<any>{
+    await this.loadData();
+  }
+
+  private async loadData(){
+    this.bill = await this.firebaseService.Bill.get(this.id);
   }
 }

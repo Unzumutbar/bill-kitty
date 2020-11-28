@@ -1,6 +1,8 @@
-import { Bill, CheckStatus, SplitBill } from '../../shared/models';
+import { Bill, SplitBill } from '../../shared/models';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
+
+import { CheckStatus } from '../../shared/enums';
 
 @Component({
   selector: 'app-confirm-bill',
@@ -13,7 +15,7 @@ export class ConfirmBillPage implements OnInit {
   public creditorBill: SplitBill;
 
   constructor(
-    private navParams: NavParams,
+    navParams: NavParams,
     private modalController: ModalController) {
     this.bill = navParams.data.bill;
   }

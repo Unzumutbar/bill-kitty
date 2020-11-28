@@ -48,22 +48,23 @@ export class Receipt {
     }
 
     // tslint:disable: no-string-literal
-    public static Map(e: DocumentChangeAction<unknown>): Receipt {
+    public static Map(doc: any): Receipt {
         const receipt = new Receipt();
-        receipt.Id = e.payload.doc.id;
-        receipt.TimeStamp = e.payload.doc.data()['timestamp'];
+        receipt.Id = doc.id;
+        receipt.TimeStamp = doc.data()['timestamp'];
 
-        const userName = e.payload.doc.data()['user'];
+        const userName = doc.data()['user'];
         receipt.User = defaultUsers.find(u => u.Name === userName);
+
         if (!receipt.User){
             receipt.User = new User();
             receipt.User.Name = userName;
             receipt.User.Icon = 'nutrition-outline';
         }
 
-        receipt.Description = e.payload.doc.data()['description'];
-        receipt.Amount = e.payload.doc.data()['amount'];
-        receipt.BillId = e.payload.doc.data()['billId'];
+        receipt.Description = doc.data()['description'];
+        receipt.Amount = doc.data()['amount'];
+        receipt.BillId = doc.data()['billId'];
         return receipt;
     }
 }

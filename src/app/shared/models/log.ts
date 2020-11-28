@@ -1,4 +1,4 @@
-import { LogType } from '../models';
+import { LogType } from '../enums';
 
 export class Log {
     Id: string;

@@ -11,11 +11,13 @@ import { RouteReuseStrategy } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { environment } from 'src/environments/environment';
+import firebase from 'firebase';
 import localDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
 
 registerLocaleData(localDe);
 
+firebase.initializeApp(environment.firebase); //<-- where the magic happens
 
 @NgModule({
   declarations: [AppComponent],
