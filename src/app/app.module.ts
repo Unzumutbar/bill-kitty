@@ -14,6 +14,7 @@ import { environment } from 'src/environments/environment';
 import firebase from 'firebase';
 import localDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(localDe);
 
@@ -29,6 +30,7 @@ firebase.initializeApp(environment.firebase); //<-- where the magic happens
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,
