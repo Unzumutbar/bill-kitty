@@ -39,21 +39,6 @@ export class Bill {
     }
 
     // tslint:disable: no-string-literal
-    /*
-    public static Map(e: DocumentChangeAction<unknown>): Bill {
-        const bill = new Bill();
-        const billDoc = e.payload.doc;
-
-        bill.Id = billDoc.id;
-        bill.TimeStamp = billDoc.data()['timestamp'];
-        bill.ReceiptCount = billDoc.data()['receiptCount'];
-        bill.TotalAmount = billDoc.data()['totalamount'];
-        bill.StartDate = new Date(billDoc.data()['startdate']);
-        bill.EndDate = new Date(billDoc.data()['enddate']);
-
-        return bill;
-    }
-    */
    public static Map(doc: any): Bill {
     const bill = new Bill();
 
@@ -107,6 +92,16 @@ export class Bill {
                 split.SharedAmount += splitAmount;
                 if (split.User === receipt.User) {
                     split.PayedAmount += receipt.Amount;
+                }
+            }
+            for (const position of receipt.Positions) {
+                const posAmount = position.Amount / splitBills.length;
+                for (const split of splitBills) {
+                    if (split.User === position.User) {
+                        split.SharedAmount += posAmount;
+                    } else {
+                        split.SharedAmount -= posAmount;
+                    }
                 }
             }
             this.TotalAmount += receipt.Amount;

@@ -1,4 +1,4 @@
-import { DocumentChangeAction } from '@angular/fire/firestore';
+import { ReceiptPosition } from './receipt-position';
 import { User } from './user';
 import { defaultUsers } from '../lists';
 import { formatDate } from '@angular/common';
@@ -10,6 +10,7 @@ export class Receipt {
     public Description = '';
     public Amount = 0;
     public BillId: string;
+    public Positions = new Array<ReceiptPosition>();
 
     get Icon(): string {
         if (this.User === null || this.User === undefined) {

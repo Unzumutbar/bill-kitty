@@ -1,4 +1,4 @@
-import { Bill, Log, Receipt } from '../../shared/models';
+import { Bill, Log, Receipt, ReceiptPosition } from '../../shared/models';
 
 import { Injectable } from '@angular/core';
 import { LogType } from '../../shared/enums';
@@ -41,6 +41,27 @@ export class LogService {
     const log = new Log();
     log.Type = LogType.Delete;
     log.Message = `Quittung wurde gelöscht: ${receipt.Id} | ${receipt.User.Name} | ${receipt.DisplayDate} | ${receipt.Description} | ${receipt.Amount}`;
+    await this.sendLog(log);
+  }
+
+  public async receiptPositionUpdate(receiptPosition: ReceiptPosition) {
+    const log = new Log();
+    log.Type = LogType.Update;
+    log.Message = `Quittungsposition wurde aktualisiert: ${receiptPosition.Id} | ${receiptPosition.User.Name} | ${receiptPosition.Description} | ${receiptPosition.Amount}`;
+    await this.sendLog(log);
+  }
+
+  public async receiptPositionAdd(receiptPosition: ReceiptPosition) {
+    const log = new Log();
+    log.Type = LogType.New;
+    log.Message = `Quittungsposition wurde hinzugefügt: ${receiptPosition.User.Name} | ${receiptPosition.Description} | ${receiptPosition.Amount}`;
+    await this.sendLog(log);
+  }
+
+  public async receiptPositionDelete(receiptPosition: ReceiptPosition) {
+    const log = new Log();
+    log.Type = LogType.Delete;
+    log.Message = `Quittungsposition wurde gelöscht: ${receiptPosition.Id} | ${receiptPosition.User.Name} | ${receiptPosition.Description} | ${receiptPosition.Amount}`;
     await this.sendLog(log);
   }
 

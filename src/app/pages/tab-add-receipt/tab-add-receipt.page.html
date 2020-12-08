@@ -23,6 +23,9 @@
         ></ion-datetime>
       </ion-item>
     </ion-col>
+  </ion-row>
+
+  <ion-row>
     <ion-col size="12">
       <ion-select [(ngModel)]="newReceipt.User" placeholder="Person">
         <ion-select-option *ngFor="let user of users" [value]="user"
@@ -30,6 +33,9 @@
         >
       </ion-select>
     </ion-col>
+  </ion-row>
+
+  <ion-row>
     <ion-col size="12">
       <ion-item>
         <ion-input
@@ -38,6 +44,9 @@
         ></ion-input>
       </ion-item>
     </ion-col>
+  </ion-row>
+
+  <ion-row>
     <ion-col size="12">
       <ion-item>
         <ion-input
@@ -47,14 +56,82 @@
         ></ion-input>
       </ion-item>
     </ion-col>
-    <ion-col size="10" offset="1">
-      <ion-button
-        expand="block"
-        color="success"
-        (click)="addReceipt(newReceipt)"
-        [disabled]="InputInvalid"
-        >Hinzufügen</ion-button
-      >
-    </ion-col>
   </ion-row>
+
+  <ion-button
+    expand="full"
+    color="success"
+    class="button-add"
+    (click)="addReceipt(newReceipt)"
+    [disabled]="inputInvalid"
+  >
+    <ion-icon name="cart-outline" class="icon-add"></ion-icon>
+    Quittung hinzufügen
+  </ion-button>
+
+  <ng-template [ngIf]="false">
+    <ion-button
+      expand="full"
+      color="primary"
+      class="button-add"
+      (click)="addPosition()"
+    >
+      <ion-icon name="add-outline" class="icon-add"></ion-icon>
+      Einzelpositionen hinzufügen
+    </ion-button>
+  </ng-template>
+  <ng-template [ngIf]="true">
+    <h2 class="ion-text-center">Einzelpositionen</h2>
+    <ion-row class="ion-text-center" class="header-row col-extend">
+      <ion-col size="1" class="ion-text-center"></ion-col>
+      <ion-col size="6" class="ion-text-center"> Person </ion-col>
+      <ion-col size="7" class="ion-text-left"> Beschreibung </ion-col>
+      <ion-col size="6" class="ion-text-right"> Betrag </ion-col>
+      <ion-col size="4" class="ion-text-right">
+        <ion-button size="small" color="primary" (click)="addPosition()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row
+      *ngFor="let position of newReceipt.Positions;"
+      class="data-row col-extend center-full"
+    >
+      <ion-col size="1" class="ion-text-center"></ion-col>
+      <ion-col size="6" class="ion-text-center">
+        <ion-select [(ngModel)]="position.User" placeholder="Person">
+          <ion-select-option *ngFor="let user of users" [value]="user"
+            >{{user.Name}}
+          </ion-select-option>
+        </ion-select></ion-col
+      >
+      <ion-col size="7" class="ion-text-left">
+        <ion-item>
+          <ion-input
+            [(ngModel)]="position.Description"
+            placeholder="Beschreibung"
+          ></ion-input> </ion-item
+      ></ion-col>
+      <ion-col size="6" class="ion-text-right">
+        <ion-item>
+          <ion-input
+            [(ngModel)]="position.Amount"
+            placeholder="Betrag(€)"
+            type="number"
+          ></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4" class="ion-text-right">
+        <ion-button
+          size="small"
+          color="danger"
+          (click)="deletePosition(position)"
+        >
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="1" class="ion-text-center"></ion-col>
+    </ion-row>
+  </ng-template>
 </ion-content>

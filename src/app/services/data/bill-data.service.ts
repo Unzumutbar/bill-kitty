@@ -3,6 +3,7 @@ import { Bill, Pagination, Receipt } from '../../shared/models';
 import { DocumentData } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { LogService } from './log.service';
+import { ReceiptDataService } from './receipt-data.service';
 import firebase from 'firebase';
 
 @Injectable({
@@ -11,20 +12,16 @@ import firebase from 'firebase';
 export class BillDataService {
 
   private name = '/Bills/';
+  private receiptService: ReceiptDataService;
+
   // tslint:disable: no-string-literal
-  constructor(private logService: LogService) { }
+  constructor(private logService: LogService) {
+    this.receiptService = new ReceiptDataService(this.logService);
+   }
 
   public async get(billId: string): Promise<Bill>{
     const bill = new Bill();
-    const billData = await firebase.firestore()
-    .collection('/Receipts/')
-    .where('billId', '==', billId)
-    .orderBy('timestamp', 'desc')
-    .get();
-
-    const receipts = billData.docs.map(e => {
-      return Receipt.Map(e);
-    });
+    const receipts = await this.receiptService.getByBillId(billId);
     bill.Init(receipts);
 
     return bill;
@@ -106,15 +103,8 @@ export class BillDataService {
 
   public async getUnpaid(): Promise<Bill>{
     const bill = new Bill();
-    const billData = await firebase.firestore()
-    .collection('/Receipts/')
-    .where('billId', '==', '')
-    .orderBy('timestamp', 'desc')
-    .get();
+    const receipts = await this.receiptService.getUnpaid();
 
-    const receipts = billData.docs.map(e => {
-      return Receipt.Map(e);
-    });
     bill.Init(receipts);
 
     return bill;

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Receipt, User } from '../../shared/models';
+import { Receipt, ReceiptPosition, User } from '../../shared/models';
 
 import { CheckStatus } from '../../shared/enums';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -14,6 +14,7 @@ import { defaultUsers } from '../../shared/lists';
 export class UpdaterecordComponent implements OnInit {
   @Input() public receipt: Receipt;
   public users: User[];
+  private deletedPositions: ReceiptPosition[];
 
   constructor(
     private modalController: ModalController,
@@ -22,10 +23,11 @@ export class UpdaterecordComponent implements OnInit {
 
   public ngOnInit() {
     this.users = defaultUsers;
+    this.deletedPositions = [];
   }
 
   public async updateReceipt(){
-    await this.firebaseService.Receipt.update(this.receipt);
+    await this.firebaseService.Receipt.update(this.receipt, this.deletedPositions);
     this.closeModal(CheckStatus.Approve);
   }
 
@@ -35,5 +37,27 @@ export class UpdaterecordComponent implements OnInit {
 
   public async closeModal(status: CheckStatus) {
     await this.modalController.dismiss(status);
+  }
+
+  public async addPosition(){
+    const defaultPosition = new ReceiptPosition();
+    defaultPosition.ReceiptId = this.receipt.Id;
+    defaultPosition.User = this.users[0];
+    defaultPosition.Description = '';
+    defaultPosition.Amount = 0;
+    defaultPosition.TimeStamp = new Date().getTime();
+
+    this.receipt.Positions.push(defaultPosition);
+  }
+
+  public async deletePosition(positionToDelete: ReceiptPosition){
+    const index = this.receipt.Positions.indexOf(positionToDelete, 0);
+    if (index > -1) {
+      if (positionToDelete.Id) {
+        this.deletedPositions.push(positionToDelete);
+      }
+
+      this.receipt.Positions.splice(index, 1);
+    }
   }
 }
