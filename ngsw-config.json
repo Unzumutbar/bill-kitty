@@ -3,7 +3,7 @@
   "index": "/index.html",
   "assetGroups": [
     {
-      "name": "Bill Kitty",
+      "name": "Bill-Kitty",
       "installMode": "prefetch",
       "resources": {
         "files": [
