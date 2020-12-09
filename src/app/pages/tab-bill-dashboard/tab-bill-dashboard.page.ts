@@ -16,6 +16,7 @@ import { UpdaterecordComponent } from '../../components/updaterecord/updaterecor
 })
 export class TabBillDashboardPage implements OnInit {
   public bill: Bill;
+  public isAudioPlaying: boolean;
 
   constructor(
     private modalController: ModalController,
@@ -29,6 +30,7 @@ export class TabBillDashboardPage implements OnInit {
   }
 
   public async ionViewWillEnter(): Promise<any>{
+    this.isAudioPlaying = false;
     await this.loadData();
   }
 
@@ -118,6 +120,10 @@ export class TabBillDashboardPage implements OnInit {
   }
 
   public playAudio(){
-    SecretAudio.play();
+    if (!this.isAudioPlaying) {
+      SecretAudio.play();
+    } else {
+      SecretAudio.stop();
+    }
   }
 }

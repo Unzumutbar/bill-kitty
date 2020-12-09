@@ -8,10 +8,17 @@ export * from './models/log';
 export * from './models/pagination';
 
 export class SecretAudio {
+
+    private static audio = new Audio();
+
     public static play(){
-        const audio = new Audio();
-        audio.src = '../../assets/audio/cat-song.mp3';
-        audio.load();
-        audio.play();
+        this.audio.src = '../../assets/audio/cat-song.mp3';
+        this.audio.load();
+        this.audio.play();
+    }
+
+    public static stop(){
+        this.audio.pause();
+        this.audio.currentTime = 0;
     }
 }
